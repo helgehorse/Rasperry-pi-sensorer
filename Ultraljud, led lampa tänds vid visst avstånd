@@ -1,0 +1,50 @@
+import RPi.GPIO as GPIO
+import time
+
+# GPIO-inställningar
+TRIG = 17
+ECHO = 18
+LAMP = 15  # GPIO där lampan är kopplad
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+GPIO.setup(LAMP, GPIO.OUT)
+
+def get_distance():
+    GPIO.output(TRIG, False)
+    time.sleep(0.1)
+
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    pulse_start, pulse_end = 0, 0
+
+    while GPIO.input(ECHO) == 0:
+        pulse_start = time.time()
+
+    while GPIO.input(ECHO) == 1:
+        pulse_end = time.time()
+
+    pulse_duration = pulse_end - pulse_start
+    distance = (pulse_duration * 17150)
+    return round(distance, 2)
+
+try:
+    while True:
+        dist = get_distance()
+        print(f"Avstånd: {dist} cm")
+
+        # Om avståndet är över 80 cm, tänd lampan
+        if dist > 80:
+            GPIO.output(LAMP, True)
+            print("Lampan tänds!")
+        else:
+            GPIO.output(LAMP, False)
+            print("Lampan släcks!")
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
