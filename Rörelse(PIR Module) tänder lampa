@@ -1,0 +1,21 @@
+import RPi.GPIO as GPIO
+import time
+
+PIR_PIN = 12
+LED_PIN = 17
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PIR_PIN, GPIO.IN)
+GPIO.setup(LED_PIN, GPIO.OUT)
+
+try:
+    while True:
+        if GPIO.input(PIR_PIN):  # Om rörelse upptäcks
+            print("Rörelse upptäckt!")
+            GPIO.output(LED_PIN, GPIO.HIGH)  # Tänd LED
+            time.sleep(10)  # Håll LED tänd i 10 sekunder
+            GPIO.output(LED_PIN, GPIO.LOW)  # Släck LED efter 10 sekunder
+        time.sleep(0.1)  # Kontrollera PIR ofta
+except KeyboardInterrupt:
+    print("Avslutar...")
+    GPIO.cleanup()
