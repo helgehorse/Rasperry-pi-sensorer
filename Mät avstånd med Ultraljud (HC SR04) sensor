@@ -1,0 +1,39 @@
+import RPi.GPIO as GPIO
+import time
+
+# Använd BCM-numerering för GPIO-stiften
+GPIO.setmode(GPIO.BCM)
+
+# Definiera GPIO-stiften för Trig och Echo
+TRIG = 17
+ECHO = 18
+
+# Sätt upp GPIO-stiften
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+
+# Skicka Trigger-signal
+GPIO.output(TRIG, False)
+time.sleep(2)
+
+# Starta mätning
+GPIO.output(TRIG, True)
+time.sleep(0.00001)  # Kort puls
+GPIO.output(TRIG, False)
+
+# Mät hur lång tid det tar för Echo-signalen att komma tillbaka
+while GPIO.input(ECHO) == 0:
+    pulse_start = time.time()
+
+while GPIO.input(ECHO) == 1:
+    pulse_end = time.time()
+
+# Beräkna avstånd
+pulse_duration = pulse_end - pulse_start
+distance = pulse_duration * 17150  # Avstånd i cm (hastighet ljudet går på)
+distance = round(distance, 2)
+
+print(f"Avstånd: {distance} cm")
+
+# Rensa GPIO-stiften
+GPIO.cleanup()
