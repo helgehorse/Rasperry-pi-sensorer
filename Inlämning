@@ -80,7 +80,7 @@ def continuous_measurement():
             print(f"Avstånd: {distance} cm | Status: {regn_status['status']} {regn_status['image']}")
 
 
-            client.publish(topic_read, json.dumps({"distance": distance, "timestamp": time.time()}))
+            client.publish(topic_read, json.dumps({"value": distance, "timestamp": time.time()}))
 
 
             message = json.dumps(regn_status, ensure_ascii=False)
