@@ -8,7 +8,7 @@ import threading
 
 
 MQTT_BROKER = "192.168.50.185"
-topic_start_measurement = "obj/smhi/63590/21"
+topic_start_measurement = "obj/smhi/63590/14"
 topic_read = "obj/tuc/ultrasonic"
 topic_regn = "set/tuc/regn"
 
